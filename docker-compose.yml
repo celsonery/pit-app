@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  front:
+    image: registry.bagarote.dev.br/bagarote/produtos-externos/front:latest
+    build:
+      context: ./
+      dockerfile: ./docker/dockerfile
+    restart: unless-stopped
+    ports:
+      - 80:80

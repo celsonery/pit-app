@@ -1,0 +1,7 @@
+/node_modules
+/dist
+/k8s
+
+.dockerignore
+.gitlab-ci.yml
+docker-compose.yml

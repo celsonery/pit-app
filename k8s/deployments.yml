@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: produtos-externos
+  namespace: bagarote-importacao
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: produtos-externos
+  template:
+    metadata:
+      labels:
+        app: produtos-externos
+    spec:
+      containers:
+      - name: produtos-externos
+        image: registry.bagarote.dev.br/bagarote/produtos-externos/front:latest
+        securityContext:
+          allowPrivilegeEscalation: false
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: produtos-externos-service
+spec:
+  selector:
+    app: produtos-externos
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP
