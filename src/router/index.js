@@ -1,22 +1,24 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView
+      component: () => import(/* webpackChunkName: "Main"*/ '../views/MainView.vue'),
+      children: [
+        { path: '', name: 'index', component: () => import(/* webpackChunkName: "IndexView" */ '../views/IndexView.vue')},
+        { path: '/profile', component: () => import(/* webpackChunkName: "ProfileView" */ '../views/ProfileView.vue') },
+        { path: '/favorites', component: () => import(/* webpackChunkName: "FavoritesView" */ '../views/FavoritesView.vue') },
+        { path: '/cart', component: () => import(/* webpackChunkName: "CartView" */ '../views/CartView.vue') },
+        { path: '/checkout', component: () => import(/* webpackChunkName: "CheckoutView" */ '../views/CheckoutView.vue') },
+      ]
     },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
+    { path: '/login', component: () => import(/* webpackChunkName: "LoginView" */ '../views/auth/LoginView.vue') },
+    { path: '/register', component: () => import(/* webpackChunkName: "RegisterView" */ '../views/auth/RegisterView.vue') },
+    { path: '/forget', component: () => import(/* webpackChunkName: "ForgotView" */ '../views/auth/ForgotPasswordView.vue') },
+    { path: '/reset', component: () => import(/* webpackChunkName: "ResetView" */ '../views/auth/ResetPasswordView.vue') },
+    { path: '/:catchAll(.*)*', component: () => import(/* webpackChunkName: "ErrorNotFound" */ '../views/ErrorNotFound.vue') }
   ]
 })
 
