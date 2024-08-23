@@ -16,7 +16,7 @@ const router = createRouter({
     },
     { path: '/login', component: () => import(/* webpackChunkName: "LoginView" */ '../views/auth/LoginView.vue') },
     { path: '/register', component: () => import(/* webpackChunkName: "RegisterView" */ '../views/auth/RegisterView.vue') },
-    { path: '/forget', component: () => import(/* webpackChunkName: "ForgotView" */ '../views/auth/ForgotPasswordView.vue') },
+    { path: '/forgot', component: () => import(/* webpackChunkName: "ForgotView" */ '../views/auth/ForgotPasswordView.vue') },
     { path: '/reset', component: () => import(/* webpackChunkName: "ResetView" */ '../views/auth/ResetPasswordView.vue') },
     { path: '/:catchAll(.*)*', component: () => import(/* webpackChunkName: "ErrorNotFound" */ '../views/ErrorNotFound.vue') }
   ]

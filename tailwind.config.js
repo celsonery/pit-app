@@ -6,6 +6,9 @@ export default {
     "./src/**/*.{vue,js}"
   ],
   theme: {
+    fontFamily: {
+      display: ["Lobster"],
+    },
     extend: {},
   },
   plugins: [],
