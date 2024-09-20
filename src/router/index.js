@@ -12,6 +12,7 @@ const router = createRouter({
         { path: '/favorites', component: () => import(/* webpackChunkName: "FavoritesView" */ '../views/FavoritesView.vue') },
         { path: '/cart', component: () => import(/* webpackChunkName: "CartView" */ '../views/CartView.vue') },
         { path: '/checkout', component: () => import(/* webpackChunkName: "CheckoutView" */ '../views/CheckoutView.vue') },
+        { path: '/details/:id', component: () => import(/* webpackChunkName: "ProductDetails" */ '../views/ProductDetailsView.vue') },
       ]
     },
     { path: '/login', component: () => import(/* webpackChunkName: "LoginView" */ '../views/auth/LoginView.vue') },
