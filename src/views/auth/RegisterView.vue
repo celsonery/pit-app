@@ -1,54 +1,86 @@
 <template>
-  <PanelComponent class="mt-2">
-    <img src="@/assets/coffee-icon.png" class="mx-auto" />
+  <Panel class="mt-2">
+    <img src="@/assets/coffee-icon.png" class="mx-auto" alt="cafeteria gourmet icon" />
     <form method="post" class="flex flex-col">
-      <label for="name" class="text-orange-950">Nome</label>
+      <label for="name">Nome</label>
       <input
-        type="text"
         name="name"
-        required
-        placeholder="Informe seu Nome"
-        class="mb-3 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
+        v-model="user.name"
+        type="text"
+        placeholder="Informe seu nome"
+        autocomplete="name"
+        class="mb-4 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
       />
 
-      <label for="email" class="text-orange-950">E-mail</label>
+      <label for="email">E-mail</label>
       <input
-        type="email"
         name="email"
-        required
+        v-model="user.email"
+        type="email"
         placeholder="Informe seu e-mail"
-        class="mb-3 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
+        autocomplete="username"
+        class="mb-4 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
       />
 
-      <label for="password" class="text-orange-950">Senha</label>
+      <label for="password">Senha</label>
       <input
-        type="password"
         name="password"
-        placeholder="Informe sua senha"
-        required
-        class="mb-3 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
-      />
-
-      <label for="password-confimation" class="text-orange-950">Senha</label>
-      <input
+        v-model="user.password"
         type="password"
-        name="password-confimation"
-        placeholder="Confirme sua senha"
-        required
-        class="mb-3 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
+        placeholder="Informe sua senha"
+        autocomplete="current-password"
+        class="mb-4 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
       />
 
-      <buttom class="my-2 px-4 py-2 bg-yellow-950 text-white border border-t-amber-500 hover:bg-amber-900 rounded-lg text-center text-xl">Cadastrar</buttom>
+      <label for="password_confirmation">Senha</label>
+      <input
+        name="password_confirmation"
+        v-model="user.password_confirmation"
+        type="password"
+        placeholder="Confirme sua senha"
+        autocomplete="new-password"
+        class="mb-4 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
+      />
 
-      <p class="mx-auto">- OU -</p>
-      <BtnGoogleComponent />
-      <BtnFacebookComponent />
+      <input
+        type="button"
+        class="my-2 px-4 py-2 bg-yellow-950 text-white border border-t-amber-500 hover:bg-amber-900 rounded-lg text-center text-xl"
+        value="Cadastrar"
+      />
+
+      <!--// Login with social networks //-->
+
+<!--      <h3 class="flex items-center w-full py-3">-->
+<!--        <span class="flex-grow bg-gray-200 rounded h-0.5"></span>-->
+<!--        <span class="mx-3 text-lg font-medium">OU</span>-->
+<!--        <span class="flex-grow bg-gray-200 rounded h-0.5"></span>-->
+<!--      </h3>-->
+
+<!--      <BtnGoogle @click.prevent="store.oauthLogin('google')" />-->
+<!--      <BtnFacebook @click.prevent="store.oauthLogin('facebook')" />-->
+
+      <div class="flex flex-col text-center">
+        <router-link :to="{ name: 'login' }" class="my-2 hover:underline"
+          >Já tem conta? Entre</router-link
+        >
+      </div>
     </form>
-  </PanelComponent>
+  </Panel>
 </template>
 
 <script setup>
-import PanelComponent from '@/components/PanelComponent.vue'
-import BtnGoogleComponent from '@/components/BtnGoogleComponent.vue'
-import BtnFacebookComponent from '@/components/BtnFacebookComponent.vue'
+import Panel from '@/components/Panel.vue'
+// import BtnGoogle from '@/components/BtnGoogle.vue'
+// import BtnFacebook from '@/components/BtnFacebook.vue'
+// import { userStore } from '@/stores/users'
+import { reactive } from 'vue'
+
+// const store = userStore()
+
+const user = reactive({
+  name: '',
+  email: '',
+  password: '',
+  password_confirmation: ''
+})
 </script>

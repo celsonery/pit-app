@@ -1,7 +1,7 @@
 <template>
   <div class="fixed bottom-0 w-full z-50 bg-white text-orange-950 border border-t-orange-950">
     <div class="flex justify-center">
-      <BtnComponent @click.prevent="$router.push('/')">
+      <BtnBar @click.prevent="$router.push('/')">
         <template v-slot:icon>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -18,8 +18,8 @@
           </svg>
         </template>
         <template v-slot:title>Início</template>
-      </BtnComponent>
-      <BtnComponent @click.prevent="$router.push('/favorites')">
+      </BtnBar>
+      <BtnBar @click.prevent="$router.push('/favorites')">
         <template v-slot:icon>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -33,8 +33,8 @@
           </svg>
         </template>
         <template v-slot:title>Favoritos</template>
-      </BtnComponent>
-      <BtnComponent @click.prevent="$router.push('/cart')">
+      </BtnBar>
+      <BtnBar @click.prevent="$router.push('/cart')">
         <template v-slot:icon>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -48,8 +48,8 @@
           </svg>
         </template>
         <template v-slot:title>Carrinho</template>
-      </BtnComponent>
-      <BtnComponent @click.prevent="$router.push('/profile')">
+      </BtnBar>
+      <BtnBar @click.prevent="$router.push('/profile')">
         <template v-slot:icon>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -65,11 +65,11 @@
           </svg>
         </template>
         <template v-slot:title>Perfil</template>
-      </BtnComponent>
+      </BtnBar>
     </div>
   </div>
 </template>
 
 <script setup>
-import BtnComponent from '@/components/bottombar/BtnComponent.vue'
+import BtnBar from '@/components/bottombar/BtnBar.vue'
 </script>

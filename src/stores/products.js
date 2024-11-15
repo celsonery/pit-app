@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import http from '@/services/http'
 
 export const productsStore = defineStore('products', () => {
   // state
@@ -14,26 +14,22 @@ export const productsStore = defineStore('products', () => {
   async function getProducts() {
     console.log('By products Store')
     try {
-      await axios.get('http://10.0.10.200:8000/api/products')
-        .then((response) => {
-          listProducts.value = response.data.data
-          console.log('Getting with axios: ', response.data.data)
-        })
+      const { data } = await http.get('/products')
+          listProducts.value = data.data
+          console.log('Getting products: ', data.data)
     } catch (error) {
-      console.log("Error getting with axios: ", error)
+      console.log("Error getting products: ", error?.response?.data)
     }
   }
 
   async function getProduct(id) {
     console.log("By product store: ", id)
     try {
-      await axios.get(`http://10.0.10.200:8000/api/products/${id}`)
-        .then((response) => {
-          productSelected.value = response.data
-          console.log('Getting by getProduct: ', response.data)
-        })
+      const { data } = await http.get(`/products/${id}`)
+      productSelected.value = data
+      console.log('Getting by getProduct: ', data)
     } catch (error) {
-      console.log("Error getting product", error)
+      console.log("Error getting product", error?.response?.data)
     }
   }
 

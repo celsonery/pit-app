@@ -1,10 +1,10 @@
 <template>
-  <NavBarComponent />
+  <NavBar />
     <RouterView />
-  <BottomBarComponent />
+  <BottomBar />
 </template>
 
 <script setup>
-import NavBarComponent from '@/components/NavBarComponent.vue'
-import BottomBarComponent from '@/components/BottomBarComponent.vue'
+import NavBar from '@/components/NavBar.vue'
+import BottomBar from '@/components/BottomBar.vue'
 </script>

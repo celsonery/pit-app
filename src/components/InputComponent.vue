@@ -5,6 +5,7 @@
     :type="type"
     :required="required"
     :placeholder="placeholder"
+    :autocomplete="autocomplete"
     class="mb-4 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700">
 </template>
 
@@ -27,6 +28,10 @@ defineProps({
     required: true
   },
   placeholder: {
+    type: String,
+    required: true
+  },
+  autocomplete: {
     type: String,
     required: true
   }
