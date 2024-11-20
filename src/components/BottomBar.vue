@@ -1,7 +1,7 @@
 <template>
   <div class="fixed bottom-0 w-full z-50 bg-white text-orange-950 border border-t-orange-950">
     <div class="flex justify-center">
-      <BtnBar @click.prevent="$router.push('/')">
+      <BtnBar @click.prevent="router.push({ name: 'index' })">
         <template v-slot:icon>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -19,7 +19,7 @@
         </template>
         <template v-slot:title>Início</template>
       </BtnBar>
-      <BtnBar @click.prevent="$router.push('/favorites')">
+      <BtnBar @click.prevent="router.push({ name: 'favorites'})">
         <template v-slot:icon>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -34,7 +34,8 @@
         </template>
         <template v-slot:title>Favoritos</template>
       </BtnBar>
-      <BtnBar @click.prevent="$router.push('/cart')">
+
+      <BtnBar @click.prevent="router.push({ name: 'cart' })">
         <template v-slot:icon>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +50,7 @@
         </template>
         <template v-slot:title>Carrinho</template>
       </BtnBar>
-      <BtnBar @click.prevent="$router.push('/profile')">
+      <BtnBar @click.prevent="router.push({ name: 'profile' })">
         <template v-slot:icon>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -72,4 +73,6 @@
 
 <script setup>
 import BtnBar from '@/components/bottombar/BtnBar.vue'
+import router from '@/router/index.js'
+
 </script>

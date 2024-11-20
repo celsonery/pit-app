@@ -1,5 +1,5 @@
 <template>
-  <PanelComponent class="mt-5">
+  <Panel class="mt-5">
     <form method="post" class="flex flex-col">
       <label for="password" class="text-orange-950">Senha</label>
       <input
@@ -21,9 +21,9 @@
 
       <buttom class="my-4 px-4 py-2 bg-yellow-950 text-white border border-t-amber-500 hover:bg-amber-900 rounded-lg text-center text-xl">Atualizar senha</buttom>
     </form>
-  </PanelComponent>
+  </Panel>
 </template>
 
 <script setup>
-import PanelComponent from '@/components/PanelComponent.vue'
+import Panel from '@/components/Panel.vue'
 </script>

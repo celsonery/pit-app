@@ -5,25 +5,41 @@
       <label for="email">E-mail</label>
       <input
         name="email"
-        v-model="user.email"
+        v-model="state.email.value"
         type="email"
         placeholder="Informe seu e-mail"
         autocomplete="username"
-        class="mb-4 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
+        :class="{ 'border-red-600': !!state.email.errorMessage }"
+        class="px-4 py-2 rounded-lg bg-amber-100 border-2"
+        :disabled="state.isLoading"
       />
+      <span v-if="!!state.email.errorMessage" class="text-red-600">
+        {{ state.email.errorMessage }}
+      </span>
 
-      <label for="password">Senha</label>
+      <label for="password" class="mt-4">Senha</label>
       <input
         name="password"
-        v-model="user.password"
+        v-model="state.password.value"
         type="password"
         placeholder="Informe sua senha"
         autocomplete="current-password"
-        class="mb-4 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
+        :class="{ 'border-red-600': !!state.password.errorMessage }"
+        class="px-4 py-2 rounded-lg bg-amber-100 border-2"
+        :disabled="state.isLoading"
       />
+      <span v-if="!!state.password.errorMessage" class="text-red-600">
+        {{ state.password.errorMessage }}
+      </span>
 
-      <div class="flex content-center my-2">
-        <input type="checkbox" id="remember" name="remember" class="w-5 h-5 rounded-lg mr-2" />
+      <div class="flex content-center my-6">
+        <input
+          type="checkbox"
+          id="remember"
+          name="remember"
+          class="w-5 h-5 rounded-lg mr-2"
+          :disabled="state.isLoading"
+        />
         <label for="remember" class="text-orange-950">Lembrar-me</label>
       </div>
 
@@ -32,25 +48,16 @@
         @click.prevent="logar"
         class="my-2 px-4 py-2 bg-yellow-950 text-white hover:bg-amber-900 rounded-lg text-center text-lg font-semibold"
         value="Entrar"
+        :disabled="state.isLoading"
       />
-
-      <!--// Login with social networks //-->
-<!--      <h3 class="flex items-center w-full py-3">-->
-<!--        <span class="flex-grow bg-gray-200 rounded h-0.5"></span>-->
-<!--        <span class="mx-3 text-lg font-medium">OU</span>-->
-<!--        <span class="flex-grow bg-gray-200 rounded h-0.5"></span>-->
-<!--      </h3>-->
-
-<!--      <BtnGoogle @click.prevent="store.oauthLogin('google')"/>-->
-<!--      <BtnFacebook @click.prevent="store.oauthLogin('facebook')"/>-->
 
       <div class="flex flex-col text-center">
         <router-link :to="{ name: 'forgot' }" class="my-2 hover:underline"
-          >Esqueceu a senha?</router-link
-        >
+          >Esqueceu a senha?
+        </router-link>
         <router-link :to="{ name: 'register' }" class="my-2 hover:underline"
-          >Ainda não tem conta? Cadastrar-se</router-link
-        >
+          >Ainda não tem conta? Cadastrar-se
+        </router-link>
       </div>
     </form>
   </Panel>
@@ -58,19 +65,60 @@
 
 <script setup>
 import Panel from '@/components/Panel.vue'
-// import BtnGoogle from '@/components/BtnGoogle.vue'
-// import BtnFacebook from '@/components/BtnFacebook.vue'
 import { reactive } from 'vue'
-import { userStore } from '@/stores/users.js'
+import services from '@/services/index.js'
+import { useToast } from 'vue-toastification'
+import { useField } from 'vee-validate'
+import { validateEmptyAndLength3, validateValidEmail } from '@/utils/validators.js'
 
-const store = userStore()
+const { value: emailValue, errorMessage: emailErrorMessage } = useField('email', validateValidEmail)
 
-const user = reactive({
-  email: '',
-  password: ''
+const { value: passwordValue, errorMessage: passwordErrorMessage } = useField(
+  'password',
+  validateEmptyAndLength3
+)
+
+const state = reactive({
+  hasErrors: false,
+  isLoading: false,
+  email: {
+    value: emailValue,
+    errorMessage: emailErrorMessage
+  },
+  password: {
+    value: passwordValue,
+    errorMessage: passwordErrorMessage
+  }
 })
 
-function logar() {
-  store.handleLogin(user)
+const toast = useToast()
+
+async function logar() {
+  try {
+    state.isLoading = true
+
+    const { data, errors } = await services.auth.login({
+      email: state.email.value,
+      password: state.password.value
+    })
+
+    console.log(data, errors)
+
+    if (!errors) {
+      localStorage.setItem('access_token', data.access_token)
+      history.back()
+      return
+    }
+
+    if (errors.status === 401) {
+      toast.error('Email ou senha inválidos!')
+    }
+  } catch (error) {
+    state.isLoading = false
+    state.hasErrors = !!error
+    toast.error('Ocorreu um erro ao tentar realizar o login!')
+  } finally {
+    state.isLoading = false
+  }
 }
 </script>

@@ -24,13 +24,13 @@ import Carousel from '@/components/Carousel.vue'
 const router = useRouter()
 const store = productsStore()
 const { listProducts } = storeToRefs(store)
-const { getProducts } = store
+// const { getProducts } = store
 
 function openDetails(id) {
   router.push(`/details/${id}`)
 }
 
 onMounted(() => {
-  getProducts()
+  // getProducts()
 })
 </script>

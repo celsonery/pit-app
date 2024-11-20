@@ -9,6 +9,7 @@
         name="name"
         v-model="user.name"
         type="text"
+        autocomplete="name"
         class="mb-4 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
       />
 
@@ -17,6 +18,7 @@
         name="email"
         v-model="user.email"
         type="email"
+        autocomplete="username"
         class="mb-4 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
       />
 
@@ -27,6 +29,7 @@
         name="password"
         v-model="user.password"
         type="password"
+        autocomplete="new-password"
         class="mb-4 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
       />
 
@@ -35,6 +38,7 @@
         name="password_confirmation"
         v-model="user.password_confirmation"
         type="password"
+        autocomplete="new-password"
         class="mb-4 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
       />
 
