@@ -1,9 +1,10 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-// import { http } from '@/services/'
+import http from '@/services/http'
 
 export const productsStore = defineStore('products', () => {
   // state
+  const isLoading = ref(false)
   const listProducts = ref([])
   const productSelected = ref({})
 
@@ -11,33 +12,46 @@ export const productsStore = defineStore('products', () => {
   const totalProducts = computed(() => listProducts.value.length)
 
   // actions
-  // async function getProducts() {
-  //   console.log('By products Store')
-  //   try {
-  //     const { data } = await http.get('/products')
-  //         listProducts.value = data.data
-  //         console.log('Getting products: ', data.data)
-  //   } catch (error) {
-  //     console.log("Error getting products: ", error?.response?.data)
-  //   }
-  // }
-  //
-  // async function getProduct(id) {
-  //   console.log("By product store: ", id)
-  //   try {
-  //     const { data } = await http.get(`/products/${id}`)
-  //     productSelected.value = data
-  //     console.log('Getting by getProduct: ', data)
-  //   } catch (error) {
-  //     console.log("Error getting product", error?.response?.data)
-  //   }
-  // }
+  async function getProducts() {
+    productSelected.value = {}
+    isLoading.value = true
+    console.log('By products Store')
+    await http
+      .get('/products')
+      .then((response) => {
+        listProducts.value = response.data.data
+        console.log('Getting products: ', response.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        isLoading.value = false
+        console.log('Finalizada busca de produtos')
+      })
+  }
+
+  async function getProduct(id) {
+    isLoading.value = true
+    console.log('By product store: ', id)
+    await http
+      .get(`/products/${id}`)
+      .then((response) => {
+        productSelected.value = response.data
+        console.log('Getting by getProduct: ', response.data)
+      })
+      .catch((error) => {
+        console.log('Error getting product', error?.response?.data)
+      })
+      .finally(() => isLoading.value = false)
+  }
 
   return {
     listProducts,
     productSelected,
     totalProducts,
-    // getProducts,
-    // getProduct
+    isLoading,
+    getProducts,
+    getProduct
   }
 })

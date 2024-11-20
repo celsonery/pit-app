@@ -9,7 +9,7 @@ import router from './router'
 
 import 'vue-toastification/dist/index.css'
 import './assets/custom.css'
-import services from '@/services/index.js'
+import http from '@/services/http.js'
 
 const app = createApp(App)
 app.use(createPinia())
@@ -20,7 +20,7 @@ router.beforeEach(async (to, from, next) => {
   if (to.matched.some((record) => record.meta.auth)) {
     if (token) {
       try {
-        await services.auth.user()
+        await http.get('/auth/user')
         next()
       } catch (error) {
         localStorage.removeItem('access_token')

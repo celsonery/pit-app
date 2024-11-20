@@ -2,7 +2,10 @@
   <Carousel />
 
   <h1 class="ml-2 font-semibold text-white">Lista de Produtos</h1>
-  <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-4 p-2 md:p-4 mb-14">
+  <div v-if="isLoading" class="mt-10 h-screen w-full text-white mx-auto justify-center text-center">
+    carregando...
+  </div>
+  <div v-else class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-4 p-2 md:p-4 mb-14">
     <PanelProduct
       v-for="product in listProducts"
       :key="product.id"
@@ -23,14 +26,14 @@ import Carousel from '@/components/Carousel.vue'
 
 const router = useRouter()
 const store = productsStore()
-const { listProducts } = storeToRefs(store)
-// const { getProducts } = store
+const { listProducts, isLoading } = storeToRefs(store)
+const { getProducts } = store
 
 function openDetails(id) {
   router.push(`/details/${id}`)
 }
 
 onMounted(() => {
-  // getProducts()
+  getProducts()
 })
 </script>

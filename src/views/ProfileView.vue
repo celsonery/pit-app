@@ -2,7 +2,7 @@
   <h1 class="p-2 text-white font-semibold">Meu perfil</h1>
 
   <Panel>
-    <img src="@/assets/coffee-icon.png" class="mx-auto m-5" />
+    <img src="@/assets/coffee-icon.png" class="mx-auto m-5" alt="Icone cafeteria gourmet" />
     <form method="post" class="flex flex-col">
       <label for="name">Nome</label>
       <input

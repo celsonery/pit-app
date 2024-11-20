@@ -1,17 +1,20 @@
 import { ref, computed, reactive } from 'vue'
 import { defineStore } from 'pinia'
-// import { http } from '@/services'
-// import { toast } from 'vue3-toastify'
+import { useToast } from 'vue-toastification'
+import http from '@/services/http'
+
+const toast = useToast()
 
 export const userStore = defineStore('users', () => {
   // state
   const user = reactive({})
   const listFavorites = ref([])
-  const listCart = ref([])
+  const listCart = reactive([])
+  const isLoading = ref(false)
 
   // getters
   const totalFavorites = computed(() => listFavorites.value.length)
-  const totalCart = computed(() => listCart.value.length)
+  const totalCart = computed(() => listCart.length)
 
   // actions
   // async function oauthLogin(provider) {
@@ -38,100 +41,120 @@ export const userStore = defineStore('users', () => {
   //       })
   //       history.back()
   //     })
-  //     .catch((err) => {
+  //     .catch((error) => {
   //       toast('Erro: Usuário ou senha incorreta!', {
   //         autoClose: 1000,
   //         position: 'bottom-center',
   //         type: 'error'
   //       })
-  //       console.log(err.response.data)
+  //       console.log(error.response.data)
   //     })
   // }
 
-  // async function getFavorites() {
-  //   try {
-  //     const { data } = await http.get(`/products/favorites/`)
-  //     listFavorites.value = data
-  //     console.log('Getting by getFavorites: ', data)
-  //   } catch (error) {
-  //     console.log('Error getting favorites', error?.response?.data)
-  //     toast('Erro ao buscar favoritos', {
-  //       autoClose: 1000,
-  //       position: 'bottom-center',
-  //       type: 'error'
-  //     })
-  //   }
-  // }
+  async function getFavorites() {
+    isLoading.value = true
+    await http
+      .get(`/products/favorites/`)
+      .then((response) => {
+        listFavorites.value = response.data
+        console.log('Getting by getFavorites: ', response.data)
+      })
+      .catch((error) => {
+        console.log('Error getting favorites', error?.response?.data)
+        toast('Erro ao buscar favoritos', {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
+      })
+      .finally(() => isLoading.value = false)
+  }
 
-  // async function addFavorite(id) {
-  //   try {
-  //     const { data } = await http.post(`/products/favorites`, { id })
-  //     listFavorites.value.push = data
-  //     console.log('Adding by getFavorites: ', data)
-  //   } catch (error) {
-  //     console.log('Error adding favorites', error?.response?.data)
-  //     toast('Erro ao adicionar produto', {
-  //       autoClose: 1000,
-  //       position: 'bottom-center',
-  //       type: 'error'
-  //     })
-  //   }
-  // }
+  async function addFavorite(id) {
+    isLoading.value = true
+    await http
+      .post(`/products/favorites`, { id })
+      .then((response) => {
+        listFavorites.value.push = response.data
+        console.log('Adding by getFavorites: ', response.data)
+      })
+      .catch((error) => {
+        console.log('Error adding favorites', error?.response?.data)
+        toast('Erro ao adicionar produto', {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
+      })
+      .finally(() => isLoading.value = false)
+  }
 
-  // async function delFavorite(id) {
-  //   let index = listFavorites.value.findIndex((obj) => obj.id == id)
-  //
-  //   try {
-  //     const { data } = await http.delete(`/products/favorites/${id}`)
-  //     console.log('Deleting by getFavorites: ', data)
-  //     listFavorites.value.splice(index, 1)
-  //   } catch (error) {
-  //     console.log('Error deleting favorites', error?.response?.data)
-  //     toast('Erro ao remover favorito', {
-  //       autoClose: 1000,
-  //       position: 'bottom-center',
-  //       type: 'error'
-  //     })
-  //   }
-  // }
-  //
-  // async function addCart(id) {
-  //   console.log(`Add to cart: ${id}`)
-  //   try {
-  //     const { data } = await http.get(`/products/${id}`)
-  //     listCart.value.push = data
-  //     console.log('Adding by addCart: ', data)
-  //     toast('Produto adicionado ao Carrinho', {
-  //       autoClose: 1000,
-  //       position: 'bottom-center',
-  //       type: 'success'
-  //     })
-  //   } catch (error) {
-  //     console.log('Error adding cart', error?.response?.data)
-  //     toast('Erro ao adicionar produto ao carrinho', {
-  //       autoClose: 1000,
-  //       position: 'bottom-center',
-  //       type: 'error'
-  //     })
-  //   }
-  // }
-  //
-  // async function delCart(id) {
-  //   let index = listFavorites.value.findIndex((obj) => obj.id == id)
-  //
-  //   try {
-  //     const { data } = await http.delete(`/products/favorites/${id}`)
-  //     console.log('Deleting by getFavorites: ', data)
-  //     listFavorites.value.splice(index, 1)
-  //   } catch (error) {
-  //     console.log('Error deleting favorites', error?.response?.data)
-  //     toast('Erro ao remover favorito', {
-  //       autoClose: 1000,
-  //       position: 'bottom-center',
-  //       type: 'error'
-  //     })
-  //   }
-  // }
+  async function delFavorite(id) {
+    let index = listFavorites.value.findIndex((obj) => obj.id === id)
+
+    await http
+      .delete(`/products/favorites/${id}`)
+      .then((response) => {
+        console.log('Deleting by getFavorites: ', response.data)
+        listFavorites.value.splice(index, 1)
+      })
+      .catch((error) => {
+        console.log('Error deleting favorites', error?.response?.data)
+        toast('Erro ao remover favorito', {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
+      })
+  }
+
+  async function addCart(id) {
+    console.log(`Add to cart: ${id}`)
+    isLoading.value = true
+    await http
+      .get(`/products/${id}`)
+      .then((response) => {
+        listCart.push(response.data[0])
+        console.log('Adding to addCart: ', response.data)
+        console.log('Response: ', response)
+        toast('Produto adicionado ao Carrinho', {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'success'
+        })
+      })
+      .catch((error) => {
+        console.log('Error adding cart', error?.response?.data)
+        toast('Erro ao adicionar produto ao carrinho', {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
+      })
+      .finally(() => isLoading.value = false)
+  }
+
+  async function delCart(id) {
+    isLoading.value = true
+
+    let index = listFavorites.value.findIndex((obj) => obj.id === id)
+
+    await http
+      .delete(`/products/favorites/${id}`)
+      .then((response) => {
+        console.log('Deleting by getFavorites: ', response)
+        listFavorites.value.splice(index, 1)
+      })
+      .catch((error) => {
+        console.log('Error deleting favorites', error?.response?.data)
+        toast('Erro ao remover favorito', {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
+      })
+      .finally(() => isLoading.value = false)
+  }
 
   // function setToken(tokenValue) {
   //   localStorage.setItem('access_token', tokenValue)
@@ -143,12 +166,12 @@ export const userStore = defineStore('users', () => {
     listCart,
     totalFavorites,
     totalCart,
+    isLoading,
     // oauthLogin,
-    // getFavorites,
-    // handleLogin,
-    // addFavorite,
-    // delFavorite,
-    // addCart,
-    // delCart
+    getFavorites,
+    addFavorite,
+    delFavorite,
+    addCart,
+    delCart
   }
 })

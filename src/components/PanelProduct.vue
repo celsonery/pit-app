@@ -15,7 +15,8 @@
 <script setup>
 const props = defineProps({
   product: {
-    required: true
+    required: true,
+    type: Object
   }
 })
 </script>
