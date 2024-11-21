@@ -12,7 +12,7 @@
       <img
         class="p-8 w-full sm:w-1/2 rounded-t-lg"
         :src="`http://127.0.0.1:8000/storage/images/products/${prod.gtins[0].images[0].url}`"
-        alt="product image"
+        :alt="prod.name"
       />
       <div class="flex flex-col px-5 sm:px-2 pb-5 sm:mt-5">
         <div class="relative" @click.prevent.stop="addFavorite(prod.id)">
@@ -62,16 +62,12 @@ import { storeToRefs } from 'pinia'
 const store = productsStore()
 const storeUser = userStore()
 
-const { isLoading } = storeToRefs(store)
-
 const route = useRoute()
-
+const { isLoading } = storeToRefs(store)
 const { addFavorite, addCart } = storeUser
-// const { isLoading } = store
 
 // Hooks
 onMounted(() => {
-  console.log(route.params.id)
   store.getProduct(route.params.id)
 })
 </script>

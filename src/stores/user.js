@@ -135,25 +135,8 @@ export const userStore = defineStore('users', () => {
   }
 
   async function delCart(id) {
-    isLoading.value = true
-
-    let index = listFavorites.value.findIndex((obj) => obj.id === id)
-
-    await http
-      .delete(`/products/favorites/${id}`)
-      .then((response) => {
-        console.log('Deleting by getFavorites: ', response)
-        listFavorites.value.splice(index, 1)
-      })
-      .catch((error) => {
-        console.log('Error deleting favorites', error?.response?.data)
-        toast('Erro ao remover favorito', {
-          autoClose: 1000,
-          position: 'bottom-center',
-          type: 'error'
-        })
-      })
-      .finally(() => isLoading.value = false)
+    let index = listCart.findIndex((obj) => obj.id === id)
+    listCart.splice(index, 1)
   }
 
   // function setToken(tokenValue) {

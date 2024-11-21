@@ -6,13 +6,5 @@
 </template>
 
 <script setup>
-import http from '@/services/http'
 
-function login() {
-  try {
-    http.get('/oauth/google')
-  } catch (error){
-    console.log(error)
-  }
-}
 </script>

@@ -5,13 +5,13 @@
   </div>
   <div v-else class="h-screen w-full">
     <div v-if="totalCart > 0">
-      <PanelFavorites
+      <PanelCart
         v-for="product in listCart"
         :key="product.id"
         :product="product"
         @click.prevent.stop="openDetails(product.id)"
       >
-      </PanelFavorites>
+      </PanelCart>
     </div>
 
     <div v-else class="h-screen w-full p-2 text-white">
@@ -23,8 +23,8 @@
 <script setup>
 import { userStore } from '@/stores/user'
 
-import PanelFavorites from '@/components/PanelFavorites.vue'
 import { storeToRefs } from 'pinia'
+import PanelCart from '@/components/PanelCart.vue'
 
 const store = userStore()
 const { listCart, totalCart, isLoading } = storeToRefs(store)

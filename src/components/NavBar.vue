@@ -43,9 +43,7 @@
 <script setup>
 import { userStore } from '@/stores/user.js'
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
 
 const store = userStore()
 const { totalCart } = storeToRefs(store)
-const viewSearch = ref(false)
 </script>

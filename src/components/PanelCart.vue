@@ -1,6 +1,6 @@
 <template>
   <div class="ml-2 bg-white rounded-md overflow-hidden flex my-1">
-    <div class="bg-blue-200 max-w-[120px]">
+    <div class="max-w-[120px]">
       <img
         v-if="props.product.gtins[0].images[0]"
         :src="`http://127.0.0.1:8000/storage/images/products/${props.product.gtins[0].images[0].url}`"
@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { userStore } from '@/stores/users'
+import { userStore } from '@/stores/user'
 
 const props = defineProps({
   product: {

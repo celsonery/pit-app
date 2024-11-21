@@ -15,6 +15,7 @@
         required
         minlength="3"
         maxlength="100"
+        pattern="/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i"
       />
       <span v-if="!!errors.email" class="text-red-600">
         {{ errors.email }}
@@ -108,29 +109,18 @@
 import Panel from '@/components/Panel.vue'
 import { computed, reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
-// import { useField } from 'vee-validate'
-// import { validateEmptyAndLength3, validateValidEmail } from '@/utils/validators.js'
 import http from '@/services/http'
-
-// const { value: emailValue, errorMessage: emailErrorMessage } = useField('email', validateValidEmail)
-//
-// const { value: passwordValue, errorMessage: passwordErrorMessage } = useField(
-//   'password',
-//   validateEmptyAndLength3
-// )
 
 const viewPass = ref(true)
 
+const toast = useToast()
+const errors = ref({})
 const state = reactive({
   isLoading: false,
   email: '',
   password: '',
   remember_me: false
 })
-
-const toast = useToast()
-
-const errors = ref({})
 
 const enableButton = computed(() => {
   return state.email !== '' && state.password !== ''
