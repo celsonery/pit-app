@@ -1,6 +1,5 @@
 <template>
-  <Carousel />
-
+  <SlideCarousel />
   <h1 class="ml-2 font-semibold text-white">Lista de Produtos</h1>
   <div v-if="isLoading" class="mt-10 h-screen w-full text-white mx-auto justify-center text-center">
     carregando...
@@ -22,7 +21,7 @@ import { storeToRefs } from 'pinia'
 import PanelProduct from '@/components/PanelProduct.vue'
 import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'
-import Carousel from '@/components/Carousel.vue'
+import SlideCarousel from '@/components/SlideCarousel.vue'
 
 const router = useRouter()
 const store = productsStore()

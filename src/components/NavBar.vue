@@ -1,23 +1,24 @@
 <template>
-  <div class="top-0 flex h-12 p-1 mb-2 shadow-md bg-white w-full text-orange-950">
+  <div class="fixed top-0 flex h-12 p-1 mb-2 shadow-md bg-white w-full text-orange-950 z-50">
     <div @click.prevent="$router.push({ name: 'index' })" class="flex-none w-10 h-10 mx-2">
       <img src="@/assets/coffee-icon.png" />
     </div>
-    <div class="flex-none w-12">
+    <div class="flex-none w-14">
       <h1 class="text-3xl font-display">Café</h1>
     </div>
+    <div class="flex-1"></div>
 
-    <div class="relative flex-1">
-      <input
-        name="search"
-        placeholder="Pesquisar"
-        class="mx-2 px-2 py-2 rounded-lg bg-amber-100 border border-amber-700 w-full"
-        required
-        minlength="3"
-        maxlength="20"
-        type="search"
-      />
-    </div>
+<!--    <div class="relative flex-1 py-0.5">-->
+<!--      <input-->
+<!--        name="search"-->
+<!--        placeholder="Pesquisar"-->
+<!--        class="mx-2 px-2 py-1 rounded-lg bg-amber-100 border border-amber-700 w-full"-->
+<!--        required-->
+<!--        minlength="3"-->
+<!--        maxlength="20"-->
+<!--        type="search"-->
+<!--      />-->
+<!--    </div>-->
 
     <div @click.prevent="$router.push('/cart')" class="flex-none w-10 ml-4 cursor-pointer">
       <svg
@@ -33,7 +34,7 @@
     </div>
     <div
       v-if="totalCart > 0"
-      class="absolute flex justify-center right-1 bg-gray-900 text-white rounded-full w-6 h-6"
+      class="absolute flex justify-center right-1 bg-yellow-400 text-yellow-950 rounded-full w-6 h-6"
     >
       {{ totalCart }}
     </div>

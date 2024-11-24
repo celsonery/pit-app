@@ -39,6 +39,12 @@ const router = createRouter({
           name: 'details',
           component: () =>
             import(/* webpackChunkName: "ProductDetails" */ '@/views/ProductDetailsView')
+        },
+        {
+          path: '/orders/:id',
+          name: 'orders',
+          component: () =>
+            import(/* webpackChunkName: "OrderDetails" */ '@/views/OrderDetailsView')
         }
       ]
     },
@@ -57,6 +63,12 @@ const router = createRouter({
       name: 'forgot',
       component: () =>
         import(/* webpackChunkName: "ForgotView" */ '@/views/auth/ForgotPasswordView')
+    },
+    {
+      path: '/verify',
+      name: 'verify',
+      component: () =>
+        import(/* webpackChunkName: "VerifyView" */ '@/views/auth/ForgotPasswordVerify.vue')
     },
     {
       path: '/reset',

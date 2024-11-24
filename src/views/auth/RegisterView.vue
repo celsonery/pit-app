@@ -94,7 +94,7 @@
       <input
         @click="register()"
         type="button"
-        class="my-2 px-4 py-2 bg-yellow-950 text-white border border-t-amber-500 hover:bg-amber-900 rounded-lg text-center text-xl disabled:bg-amber-700 disabled:cursor-not-allowed"
+        class="my-2 px-4 py-2 bg-yellow-950 text-white hover:bg-amber-900 rounded-lg text-center text-xl disabled:bg-gray-400 disabled:cursor-not-allowed"
         value="Cadastrar"
         :disabled="!enableButton"
       />
@@ -135,7 +135,8 @@ const enableButton = computed(() => {
     user.name !== '' &&
     user.email !== '' &&
     user.password !== '' &&
-    user.password_confirmation !== ''
+    user.password_confirmation !== '' &&
+      user.password === user.password_confirmation
   )
 })
 

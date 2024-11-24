@@ -5,13 +5,13 @@
       <label for="email">E-mail</label>
       <input
         name="email"
-        v-model="state.email"
+        v-model="frmUser.email"
         type="email"
         placeholder="Informe seu e-mail"
         autocomplete="username"
         :class="{ 'border-red-600': !!errors.email }"
         class="px-4 py-2 rounded-lg bg-amber-100 border-2"
-        :disabled="state.isLoading"
+        :disabled="isLoading"
         required
         minlength="3"
         maxlength="100"
@@ -25,13 +25,13 @@
         <label for="password" class="mt-4">Senha</label>
         <input
           name="password"
-          v-model="state.password"
+          v-model="frmUser.password"
           :type="viewPass ? 'password' : 'text'"
           placeholder="Informe sua senha"
           autocomplete="current-password"
           :class="{ 'border-red-600': !!errors.password }"
           class="px-4 py-2 rounded-lg bg-amber-100 border-2"
-          :disabled="state.isLoading"
+          :disabled="isLoading"
           required
           minlength="3"
           maxlength="100"
@@ -78,9 +78,9 @@
           type="checkbox"
           id="remember"
           name="remember"
-          v-model="state.remember_me"
+          v-model="frmUser.remember_me"
           class="w-5 h-5 rounded-lg mr-2"
-          :disabled="state.isLoading"
+          :disabled="isLoading"
         />
         <label for="remember" class="text-orange-950">Lembrar-me</label>
       </div>
@@ -90,7 +90,7 @@
         @click.prevent="logar"
         class="my-2 px-4 py-2 bg-yellow-950 text-white hover:bg-amber-900 rounded-lg text-center text-lg font-semibold disabled:bg-amber-700 disabled:cursor-not-allowed"
         value="Entrar"
-        :disabled="state.isLoading || !enableButton"
+        :disabled="isLoading || !enableButton"
       />
 
       <div class="flex flex-col text-center">
@@ -108,46 +108,26 @@
 <script setup>
 import Panel from '@/components/Panel.vue'
 import { computed, reactive, ref } from 'vue'
-import { useToast } from 'vue-toastification'
-import http from '@/services/http'
+import { userStore } from '@/stores/user.js'
+import { storeToRefs } from 'pinia'
+
+const store = userStore()
+const { isLoading } = storeToRefs(store)
+const { handlerLogin } = store
 
 const viewPass = ref(true)
-
-const toast = useToast()
 const errors = ref({})
-const state = reactive({
-  isLoading: false,
+const frmUser = reactive({
   email: '',
   password: '',
   remember_me: false
 })
 
 const enableButton = computed(() => {
-  return state.email !== '' && state.password !== ''
+  return frmUser.email !== '' && frmUser.password !== ''
 })
 
-async function logar() {
-  state.isLoading = true
-
-  await http
-    .post('/auth/login', {
-      email: state.email,
-      password: state.password,
-      remmember_me: state.remember_me
-    })
-    .then((response) => {
-      localStorage.setItem('access_token', response.data.access_token)
-      history.back()
-    })
-    .catch((error) => {
-      console.log(error)
-      if (error?.response?.status === 422) {
-        errors.value = error.response.data.errors
-      }
-      toast.error('Ocorreu um erro ao tentar realizar o login!')
-    })
-    .finally(() => {
-      state.isLoading = false
-    })
-}
+const logar = (async () => {
+  handlerLogin(frmUser)
+})
 </script>

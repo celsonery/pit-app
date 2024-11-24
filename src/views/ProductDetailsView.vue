@@ -3,7 +3,7 @@
     carregando...
   </div>
 
-  <div v-else>
+  <div v-else class="mb-24">
     <div
       v-for="prod in store.productSelected"
       :key="prod.id"
@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { productsStore } from '../stores/products.js'
+import { productsStore } from '@/stores/products.js'
 import { userStore } from '@/stores/user.js'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'

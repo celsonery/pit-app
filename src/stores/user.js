@@ -1,106 +1,221 @@
-import { ref, computed, reactive } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useToast } from 'vue-toastification'
 import http from '@/services/http'
+import router from '@/router/index.js'
 
 const toast = useToast()
 
 export const userStore = defineStore('users', () => {
   // state
-  const user = reactive({})
+  const user = ref({})
   const listFavorites = ref([])
-  const listCart = reactive([])
+  const listCart = ref([])
   const isLoading = ref(false)
+  const listOrders = ref([])
+  const sumOrder = ref(0)
+  const orderSelected = ref({})
+  const passwordToken = ref()
 
   // getters
   const totalFavorites = computed(() => listFavorites.value.length)
-  const totalCart = computed(() => listCart.length)
+  const totalCart = computed(() => listCart.value.length)
+  const totalOrders = computed(() => listOrders.value.length)
 
   // actions
-  // async function oauthLogin(provider) {
-  //   try {
-  //     const response = await http.get('oauth/' + provider)
-  //     setToken(response.data.access_token)
-  //     console.log(response.data)
-  //     let res = (window.location.href = response.data)
-  //     console.log(res)
-  //   } catch (error) {
-  //     console.log('Erro no oauth: ', error)
-  //   }
-  // }
+  const setUser = (userReceive) => {
+    user.value = userReceive
+  }
 
-  // async function handleLogin(user) {
-  //   await http
-  //     .post('/auth/login', user)
-  //     .then((response) => {
-  //       setToken(response.data.access_token)
-  //       toast('Usuário autenticado com sucesso!', {
-  //         autoClose: 1000,
-  //         position: 'bottom-center',
-  //         type: 'success'
-  //       })
-  //       history.back()
-  //     })
-  //     .catch((error) => {
-  //       toast('Erro: Usuário ou senha incorreta!', {
-  //         autoClose: 1000,
-  //         position: 'bottom-center',
-  //         type: 'error'
-  //       })
-  //       console.log(error.response.data)
-  //     })
-  // }
+  const delUser = () => {
+    user.value = {}
+    localStorage.removeItem('access_token')
+  }
 
-  async function getFavorites() {
+  const handlerLogin = async (user) => {
+    isLoading.value = true
+
+    await http
+      .post(`/auth/login`, { ...user })
+      .then((response) => {
+        setUser(response.data.user)
+        localStorage.setItem('access_token', response.data.user.access_token)
+        toast('Usuário autenticado com sucesso!', {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'success'
+        })
+        router.push({ name: 'index' })
+      })
+      .catch((error) => {
+        if (error.status === 401) {
+          toast('Usuário ou senha incorretas', {
+            autoClose: 1000,
+            position: 'bottom-center',
+            type: 'error'
+          })
+        } else {
+          toast('Erro inesperado!', {
+            autoClose: 1000,
+            position: 'bottom-center',
+            type: 'error'
+          })
+        }
+      })
+      .finally(() => (isLoading.value = false))
+  }
+
+  const handlerLogout = async () => {
+    await http
+      .post(`/auth/logout`)
+      .then(() => {
+        delUser()
+        router.push({ name: 'index' })
+      })
+      .catch((error) => {
+        toast(error.message, {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
+      })
+  }
+
+  const handlerUpdate = async (userData) => {
+    await http.put('/user/', { userData })
+      .then(() => {
+        toast('Usuário atualizado com sucesso!', {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'success'
+        })
+      })
+      .catch((error) => {
+        toast(error.message, {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
+      })
+  }
+
+  const forgotPassword = async (email) => {
+    isLoading.value = true
+    await http.post('/auth/password/create', { email })
+      .then(() => {
+        router.push({ name: 'verify'})
+      })
+      .catch(error => {
+        console.log(error)
+        toast('Erro ao verificar código!', {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
+      })
+      .finally(() => {
+        isLoading.value = false
+      })
+  }
+
+  const forgotPasswordVerify = async (token) => {
+    isLoading.value = true
+    await http.get(`/auth/password/find/${token}`)
+      .then(response => {
+        passwordToken.value = response.data[0].token
+        router.push({ name: 'reset'})
+      })
+      .catch(error => {
+        console.log(error)
+        toast('Erro ao alterar senha!', {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
+      })
+      .finally(() => {
+        isLoading.value = false
+      })
+  }
+
+  const forgotPasswordReset = async (password, password_confirmation) => {
+    isLoading.value = true
+    await http.post(`/auth/password/reset/`, {
+      'password': password,
+      'password_confirmation': password_confirmation,
+      'token': passwordToken.value,
+    })
+      .then(() => {
+        passwordToken.value = ''
+        toast('Senha alterado com sucesso!', {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'success'
+        })
+        router.push({ name: 'index'})
+      })
+      .catch(error => {
+        console.log(error)
+        toast('Erro ao solicitar reset de senha!', {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
+      })
+      .finally(() => {
+        isLoading.value = false
+      })
+  }
+
+  const getFavorites = async () => {
     isLoading.value = true
     await http
       .get(`/products/favorites/`)
       .then((response) => {
         listFavorites.value = response.data
-        console.log('Getting by getFavorites: ', response.data)
       })
       .catch((error) => {
-        console.log('Error getting favorites', error?.response?.data)
-        toast('Erro ao buscar favoritos', {
+        toast(error.message, {
           autoClose: 1000,
           position: 'bottom-center',
           type: 'error'
         })
       })
-      .finally(() => isLoading.value = false)
+      .finally(() => (isLoading.value = false))
   }
 
-  async function addFavorite(id) {
+  const addFavorite = async (id) => {
     isLoading.value = true
     await http
       .post(`/products/favorites`, { id })
       .then((response) => {
         listFavorites.value.push = response.data
-        console.log('Adding by getFavorites: ', response.data)
+        toast('Produto adicionado aos favoritos!', {
+          autoClose: 300,
+          position: 'bottom-center',
+          type: 'success'
+        })
       })
       .catch((error) => {
-        console.log('Error adding favorites', error?.response?.data)
-        toast('Erro ao adicionar produto', {
+        toast(error.message, {
           autoClose: 1000,
           position: 'bottom-center',
           type: 'error'
         })
       })
-      .finally(() => isLoading.value = false)
+      .finally(() => (isLoading.value = false))
   }
 
-  async function delFavorite(id) {
+  const delFavorite = async (id) => {
     let index = listFavorites.value.findIndex((obj) => obj.id === id)
 
     await http
       .delete(`/products/favorites/${id}`)
-      .then((response) => {
-        console.log('Deleting by getFavorites: ', response.data)
+      .then(() => {
         listFavorites.value.splice(index, 1)
       })
       .catch((error) => {
-        console.log('Error deleting favorites', error?.response?.data)
-        toast('Erro ao remover favorito', {
+        toast(error.message, {
           autoClose: 1000,
           position: 'bottom-center',
           type: 'error'
@@ -108,15 +223,13 @@ export const userStore = defineStore('users', () => {
       })
   }
 
-  async function addCart(id) {
-    console.log(`Add to cart: ${id}`)
+  const addCart = async (id) => {
     isLoading.value = true
     await http
       .get(`/products/${id}`)
       .then((response) => {
-        listCart.push(response.data[0])
-        console.log('Adding to addCart: ', response.data)
-        console.log('Response: ', response)
+        listCart.value.push(response.data[0])
+        sumOrder.value += response.data[0].gtins[0].price
         toast('Produto adicionado ao Carrinho', {
           autoClose: 1000,
           position: 'bottom-center',
@@ -124,37 +237,103 @@ export const userStore = defineStore('users', () => {
         })
       })
       .catch((error) => {
-        console.log('Error adding cart', error?.response?.data)
-        toast('Erro ao adicionar produto ao carrinho', {
+        toast(error.message, {
           autoClose: 1000,
           position: 'bottom-center',
           type: 'error'
         })
       })
-      .finally(() => isLoading.value = false)
+      .finally(() => (isLoading.value = false))
   }
 
-  async function delCart(id) {
-    let index = listCart.findIndex((obj) => obj.id === id)
-    listCart.splice(index, 1)
+  const delCart = async (index) => {
+    sumOrder.value -= listCart.value[index].gtins[0].price
+    listCart.value.splice(index, 1)
   }
 
-  // function setToken(tokenValue) {
-  //   localStorage.setItem('access_token', tokenValue)
-  // }
+  const clearCart = () => {
+    listCart.value = []
+    sumOrder.value = 0
+  }
+
+  const getOrders = async () => {
+    isLoading.value = true
+    await http
+      .get(`/orders/`)
+      .then((response) => {
+        listOrders.value = response.data
+      })
+      .catch((error) => {
+        toast(error.message, {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
+      })
+      .finally(() => (isLoading.value = false))
+  }
+
+  const getOrder = async (id) => {
+    isLoading.value = true
+    await http
+      .get(`/orders/${id}`)
+      .then((response) => {
+        console.log(response.data)
+        orderSelected.value = response.data
+      })
+      .catch((error) => {
+        toast(error.message, {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
+      })
+      .finally(() => (isLoading.value = false))
+  }
+
+  const getUser = async () => {
+    isLoading.value = true
+    await http
+      .get(`/auth/user`)
+      .then((response) => {
+        user.value = response.data.user
+      })
+      .catch((error) => {
+        toast(error.message, {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
+      })
+      .finally(() => (isLoading.value = false))
+  }
 
   return {
     user,
     listFavorites,
     listCart,
+    listOrders,
+    orderSelected,
+    sumOrder,
     totalFavorites,
     totalCart,
+    totalOrders,
     isLoading,
-    // oauthLogin,
+    setUser,
+    handlerLogin,
+    handlerLogout,
+    handlerUpdate,
+    forgotPassword,
+    forgotPasswordVerify,
+    forgotPasswordReset,
     getFavorites,
     addFavorite,
     delFavorite,
     addCart,
-    delCart
+    delCart,
+    clearCart,
+    getUser,
+    getOrders,
+    getOrder
   }
 })

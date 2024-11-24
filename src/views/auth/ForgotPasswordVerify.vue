@@ -2,25 +2,24 @@
   <Panel class="mt-5">
     <div class="p-4 my-6 bg-amber-100 text-amber-950 border border-amber-800 rounded-lg">
       <h5>
-        Se esqueceu a senha, informe seu e-mail cadastrado que enviaremos uma solicitação de troca
-        de senha.
+        Insira o código que enviamos via e-mail.
       </h5>
     </div>
     <form method="post" class="flex flex-col">
-      <label for="email" class="text-orange-950">E-mail</label>
+      <label for="code" class="text-orange-950">Código</label>
       <input
-        type="email"
-        name="email"
-        placeholder="Informe seu e-mail"
+        type="text"
+        name="code"
+        placeholder="Insira o código"
         class="mb-4 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
         required
-        minlength="3"
-        maxlength="100"
-        pattern="/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i"
-        v-model="email"
+        minlength="6"
+        maxlength="6"
+        pattern="/^[0-9.]/i"
+        v-model="code"
       />
-      <span v-if="!!errors?.email" class="text-red-600 -mt-4">
-          {{ errors.email[0] }}
+      <span v-if="!!errors?.code" class="text-red-600 -mt-4">
+          {{ errors.code[0] }}
       </span>
 
       <input
@@ -28,7 +27,7 @@
         type="button"
         class="my-4 px-4 py-2 bg-yellow-950 text-white hover:bg-amber-900 rounded-lg text-center text-lg font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
         :disabled="!enableButton"
-        value="Recuperar minha senha"
+        value="Validar código"
       />
     </form>
   </Panel>
@@ -39,17 +38,17 @@ import Panel from '@/components/Panel.vue'
 import { computed, ref } from 'vue'
 import { userStore } from '@/stores/user.js'
 
-const email = ref('')
+const code = ref('')
 const errors = ref({})
 
 const store = userStore()
-const { forgotPassword } = store
+const { forgotPasswordVerify } = store
 
 const enableButton = computed(() => {
-  return (email.value !== '' && email.value.length > 3)
+  return (code.value !== '' && code.value.length >= 6)
 })
 
 const sendRequest = () => {
-  forgotPassword(email.value)
+  forgotPasswordVerify(code.value)
 }
 </script>

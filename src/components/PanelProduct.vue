@@ -7,7 +7,7 @@
 
       <div class="grid justify-items-stretch p-2 md:p-4">
         <p class="font-semibold text-xs justify-self-center mb-1">{{ props.product.name }}</p>
-        <p class="justify-self-end font-semibold text-sm">{{ props.product.gtins[0].price.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}) }}</p>
+        <p class="justify-self-end font-semibold text-sm">{{ props.product.gtins[0].price.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) }}</p>
       </div>
     </div>
 </template>

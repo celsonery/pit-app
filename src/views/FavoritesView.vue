@@ -4,7 +4,7 @@
     carregando...
   </div>
 
-  <div v-else class="h-screen w-full">
+  <div v-else class="h-screen w-full mb-24">
     <div v-if="totalFavorites > 0">
       <PanelFavorites
         v-for="product in listFavorites"
@@ -23,9 +23,9 @@
 
 <script setup>
 import { userStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import PanelFavorites from '@/components/PanelFavorites.vue'
 
 const router = useRouter()

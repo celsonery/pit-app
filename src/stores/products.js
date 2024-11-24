@@ -1,6 +1,9 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { useToast } from 'vue-toastification'
 import http from '@/services/http'
+
+const toast = useToast()
 
 export const productsStore = defineStore('products', () => {
   // state
@@ -15,33 +18,36 @@ export const productsStore = defineStore('products', () => {
   async function getProducts() {
     productSelected.value = {}
     isLoading.value = true
-    console.log('By products Store')
     await http
       .get('/products')
       .then((response) => {
         listProducts.value = response.data.data
-        console.log('Getting products: ', response.data)
       })
-      .catch((err) => {
-        console.log(err)
+      .catch((error) => {
+        toast(error.message, {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
       })
       .finally(() => {
         isLoading.value = false
-        console.log('Finalizada busca de produtos')
       })
   }
 
   async function getProduct(id) {
     isLoading.value = true
-    console.log('By product store: ', id)
     await http
       .get(`/products/${id}`)
       .then((response) => {
         productSelected.value = response.data
-        console.log('Getting by getProduct: ', response.data)
       })
       .catch((error) => {
-        console.log('Error getting product', error?.response?.data)
+        toast(error.message, {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
       })
       .finally(() => isLoading.value = false)
   }
