@@ -19,8 +19,7 @@
         </div>
       </div>
       <div
-        :class="orderSelected?.bgcolor"
-        class="w-fit my-4 py-1 px-2 rounded-lg border border-gray-300 bg-opacity-75"
+        class="w-fit my-4 py-1 px-2 rounded-lg border border-gray-300 bg-amber-400"
       >
         {{ orderSelected.status }}
       </div>
@@ -28,19 +27,10 @@
       <div v-if="orderSelected.gtins[0]" class="bg-yellow-100 max-h-60 overflow-auto p-2">
         <table>
           <th>Item</th>
-          <th>Foto</th>
           <th>Nome</th>
           <th>Valor</th>
           <tr v-for="(item, index) in orderSelected.gtins" :key="item.id">
             <td class="text-center m-1">{{ index + 1 }}</td>
-            <td class="m-1 w-10 h-10">
-              <img
-                v-if="item.images[0]"
-                :src="`http://127.0.0.1:8000/storage/images/products/${item.images[0].url}`"
-                :alt="item.id"
-                class="w-10"
-              />
-            </td>
             <td class="w-full p-2 justify-end">{{ item.product.name }}</td>
             <td>
               {{ item.price?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}
