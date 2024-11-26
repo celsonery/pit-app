@@ -172,7 +172,7 @@
     </div>
   </Panel>
 
-  <Panel class="mb-28">
+  <Panel>
     <h3 class="font-semibold">Minha conta:</h3>
     <hr class="my-2" />
     <div>
@@ -184,6 +184,9 @@
       />
     </div>
   </Panel>
+  <div class="h-14">
+    &nbsp;
+  </div>
 </template>
 
 <script setup>
