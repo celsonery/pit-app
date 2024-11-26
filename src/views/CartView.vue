@@ -19,7 +19,7 @@
                 <td class="m-1 w-10 h-10">
                   <img
                     v-if="item.gtins[0].images[0]"
-                    :src="`http://127.0.0.1:8000/storage/images/products/${item.gtins[0].images[0].url}`"
+                    :src="`${api_url}/storage/images/products/${item.gtins[0].images[0].url}`"
                     :alt="item.name"
                     class="w-10"
                   />
@@ -88,6 +88,9 @@ import Panel from '@/components/Panel.vue'
 const router = useRouter()
 const store = userStore()
 const { listCart, totalCart, isLoading, sumOrder } = storeToRefs(store)
+
+const api_url = import.meta.env.VITE_API_URL
+
 const { delCart, clearCart } = store
 
 const toCheckout = () => {

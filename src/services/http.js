@@ -1,13 +1,7 @@
 import axios from 'axios'
-// import router from '@/router/index.js'
-
-const API_ENVS = {
-  development: 'http://127.0.0.1:8000/api',
-  production: 'https://api-cafe.oregon.net.br'
-}
 
 const axiosInstance = axios.create({
-  baseURL: API_ENVS.development,
+  baseURL: import.meta.env.VITE_API_URL + '/api',
   headers: {
     'Content-Type': 'application/json'
   }

@@ -3,7 +3,7 @@
     <div class="max-w-[120px] min-w-[120px">
       <img
         v-if="props.product.gtins[0].images[0]"
-        :src="`http://127.0.0.1:8000/storage/images/products/${props.product.gtins[0].images[0].url}`"
+        :src="`${api_url}/storage/images/products/${props.product.gtins[0].images[0].url}`"
         :alt="props.product.name"
       />
       <svg
@@ -45,6 +45,8 @@ const props = defineProps({
 })
 
 const store = userStore()
+const api_url = import.meta.env.VITE_API_URL
+
 const { delFavorite } = store
 
 function removeFavorite(id) {
