@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainView from '@/views/MainView'
 import IndexView from '@/views/IndexView'
+import Demo from '@/views/DemoView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,8 +26,7 @@ const router = createRouter({
         {
           path: '/cart',
           name: 'cart',
-          component: () => import(/* webpackChunkName: "CartView" */ '@/views/CartView'),
-          meta: { auth: true }
+          component: () => import(/* webpackChunkName: "CartView" */ '@/views/CartView')
         },
         {
           path: '/checkout',
@@ -35,18 +35,39 @@ const router = createRouter({
           meta: { auth: true }
         },
         {
+          path: '/delivery',
+          name: 'delivery',
+          component: () => import(/* webpackChunkName: "DeliveryMethodsView" */ '@/views/checkout/DeliveryMethodsView.vue'),
+          meta: { auth: true }
+        },
+        {
+          path: '/resume',
+          name: 'resume',
+          component: () => import(/* webpackChunkName: "ResumeCheckoutView" */ '@/views/checkout/ResumeCheckoutView.vue'),
+          meta: { auth: true }
+        },
+        {
           path: '/details/:id',
           name: 'details',
-          component: () =>
-            import(/* webpackChunkName: "ProductDetails" */ '@/views/ProductDetailsView')
+          component: () => import(/* webpackChunkName: "ProductDetails" */ '@/views/ProductDetailsView')
         },
         {
           path: '/orders/:id',
           name: 'orders',
-          component: () =>
-            import(/* webpackChunkName: "OrderDetails" */ '@/views/OrderDetailsView')
+          component: () => import(/* webpackChunkName: "OrderDetails" */ '@/views/OrderDetailsView'),
+          meta: { auth: true }
         }
       ]
+    },
+    {
+      path: '/demo',
+      name: 'demo',
+      component: Demo
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: () => import(/* webpackChunkName: "LoginView" */ '@/views/auth/LoginView')
     },
     {
       path: '/login',
