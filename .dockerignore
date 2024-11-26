@@ -1,0 +1,6 @@
+/node_modules
+/android
+/cypress
+/k8s
+/cypress.config.js
+/README.md
