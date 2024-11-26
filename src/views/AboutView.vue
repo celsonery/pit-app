@@ -1,6 +1,9 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <Panel>
+    <h1>Sobre o aplicativo.</h1>
+  </Panel>
 </template>
 
+<script setup lang="ts">
+import Panel from '@/components/Panel.vue'
+</script>
