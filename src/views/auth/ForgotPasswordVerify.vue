@@ -1,25 +1,23 @@
 <template>
   <Panel class="mt-5">
     <div class="p-4 my-6 bg-amber-100 text-amber-950 border border-amber-800 rounded-lg">
-      <h5>
-        Insira o código que enviamos via e-mail.
-      </h5>
+      <h5>Insira o código que enviamos via e-mail.</h5>
     </div>
     <form method="post" class="flex flex-col">
       <label for="code" class="text-orange-950">Código</label>
       <input
-        type="text"
+        type="number"
         name="code"
         placeholder="Insira o código"
         class="mb-4 px-4 py-2 rounded-lg bg-amber-100 border border-amber-700"
         required
         minlength="6"
         maxlength="6"
-        pattern="/^[0-9.]/i"
+        pattern="/[0-9]/"
         v-model="code"
       />
       <span v-if="!!errors?.code" class="text-red-600 -mt-4">
-          {{ errors.code[0] }}
+        {{ errors.code[0] }}
       </span>
 
       <input
@@ -45,7 +43,7 @@ const store = userStore()
 const { forgotPasswordVerify } = store
 
 const enableButton = computed(() => {
-  return (code.value !== '' && code.value.length >= 6)
+  return code.value > 99999
 })
 
 const sendRequest = () => {
