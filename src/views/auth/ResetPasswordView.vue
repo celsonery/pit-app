@@ -1,5 +1,11 @@
 <template>
   <Panel class="mt-5">
+    <div class="p-4 my-6 bg-amber-100 text-amber-950 border border-amber-800 rounded-lg">
+      <h5>
+        Informe uma nova senha.
+      </h5>
+    </div>
+
     <form method="post" class="flex flex-col">
       <label for="password" class="text-orange-950">Senha</label>
       <input
