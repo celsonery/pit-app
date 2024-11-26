@@ -16,6 +16,8 @@ export const userStore = defineStore('users', () => {
   const sumOrder = ref(0)
   const orderSelected = ref({})
   const passwordToken = ref()
+  const payment = ref()
+  const delivery = ref()
 
   // getters
   const totalFavorites = computed(() => listFavorites.value.length)
@@ -29,6 +31,14 @@ export const userStore = defineStore('users', () => {
 
   const delUser = () => {
     user.value = {}
+    listFavorites.value = []
+    listCart.value = []
+    listOrders.value = []
+    sumOrder.value = 0
+    orderSelected.value = {}
+    passwordToken.value = ''
+    payment.value = ''
+    delivery.value = ''
     localStorage.removeItem('access_token')
   }
 
@@ -147,12 +157,12 @@ export const userStore = defineStore('users', () => {
     })
       .then(() => {
         passwordToken.value = ''
-        toast('Senha alterado com sucesso!', {
+        toast('Senha alterado com sucesso, efetue o login!', {
           autoClose: 1000,
           position: 'bottom-center',
           type: 'success'
         })
-        router.push({ name: 'index'})
+        router.push({ name: 'login'})
       })
       .catch(error => {
         console.log(error)
@@ -197,11 +207,15 @@ export const userStore = defineStore('users', () => {
         })
       })
       .catch((error) => {
-        toast(error.message, {
-          autoClose: 1000,
-          position: 'bottom-center',
-          type: 'error'
-        })
+        if (error.status === 401) {
+          router.push({ name: 'login'})
+        } else {
+          toast('Erro inesperado!', {
+            autoClose: 1000,
+            position: 'bottom-center',
+            type: 'error'
+          })
+        }
       })
       .finally(() => (isLoading.value = false))
   }
@@ -291,6 +305,33 @@ export const userStore = defineStore('users', () => {
       .finally(() => (isLoading.value = false))
   }
 
+  const createOrder = async () => {
+    isLoading.value = true
+    await http
+      .post(`/orders/`, {
+        "order": listCart.value
+      })
+      .then((response) => {
+        console.log(response.data)
+        listCart.value = []
+        sumOrder.value = 0
+        toast('Pedido realizada com sucesso! Verifique no campo pedidos no seu perfil.', {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'success'
+        })
+        router.push({ name: 'profile'})
+      })
+      .catch((error) => {
+        toast(error.message, {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'error'
+        })
+      })
+      .finally(() => (isLoading.value = false))
+  }
+
   const getUser = async () => {
     isLoading.value = true
     await http
@@ -319,6 +360,8 @@ export const userStore = defineStore('users', () => {
     totalCart,
     totalOrders,
     isLoading,
+    payment,
+    delivery,
     setUser,
     handlerLogin,
     handlerLogout,
@@ -334,6 +377,7 @@ export const userStore = defineStore('users', () => {
     clearCart,
     getUser,
     getOrders,
-    getOrder
+    getOrder,
+    createOrder
   }
 })
