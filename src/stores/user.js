@@ -42,6 +42,21 @@ export const userStore = defineStore('users', () => {
     localStorage.removeItem('access_token')
   }
 
+  // async function oauthLogin(provider) {
+  //   try {
+  //     //const response = await http.get('oauth/' + provider)
+  //     window.location.href = `http://127.0.0.1:8000/api/oauth/${provider}`
+  //
+  //     // setUser(response.data.user)
+  //     // localStorage.setItem('access_token', response.data.user.access_token)
+  //     //
+  //     // console.log(response.data)
+  //     // let res = (window.location.href = response.data)
+  //     // console.log(res)
+  //   } catch (error) {
+  //     console.log('Erro no oauth: ', error)
+  //   }
+  // }
   const handlerLogin = async (user) => {
     isLoading.value = true
 
@@ -74,6 +89,33 @@ export const userStore = defineStore('users', () => {
       })
       .finally(() => (isLoading.value = false))
   }
+
+  const handlerRegister = async (user) => {
+    isLoading.value = true
+
+    await http
+      .post(`/auth/register`, { ...user })
+      .then((response) => {
+        console.log(response.data)
+        setUser(response.data.user)
+        localStorage.setItem('access_token', response.data.access_token)
+        toast('Usuário cadastrado com sucesso!', {
+          autoClose: 1000,
+          position: 'bottom-center',
+          type: 'success'
+        })
+        router.push({ name: 'index' })
+      })
+      .catch((error) => {
+          toast(error.message, {
+            autoClose: 1000,
+            position: 'bottom-center',
+            type: 'error'
+          })
+      })
+      .finally(() => (isLoading.value = false))
+  }
+
 
   const handlerLogout = async () => {
     await http
@@ -364,6 +406,7 @@ export const userStore = defineStore('users', () => {
     delivery,
     setUser,
     handlerLogin,
+    handlerRegister,
     handlerLogout,
     handlerUpdate,
     forgotPassword,
