@@ -15,11 +15,13 @@ export const productsStore = defineStore('products', () => {
   const totalProducts = computed(() => listProducts.value.length)
 
   // actions
-  async function getProducts() {
+  async function getProducts(search = '') {
     productSelected.value = {}
     isLoading.value = true
+    let url = search !== '' ? `/products?search=${search}` : '/products'
+    console.log(url)
     await http
-      .get('/products')
+      .get(url)
       .then((response) => {
         listProducts.value = response.data.data
       })

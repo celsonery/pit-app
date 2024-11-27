@@ -10,12 +10,10 @@
         <div v-if="totalCart > 0">
           <div class="bg-yellow-100 max-h-60 overflow-auto p-2">
             <table>
-              <th>Item</th>
               <th>Foto</th>
               <th>Nome</th>
               <th>Valor</th>
               <tr v-for="(item, index) in listCart" :key="item.id">
-                <td class="text-center m-1">{{ index + 1 }}</td>
                 <td class="m-1 w-10 h-10">
                   <img
                     v-if="item.gtins[0].images[0]"

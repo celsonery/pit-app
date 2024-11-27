@@ -6,24 +6,24 @@
     <div class="flex-none w-14">
       <h1 class="text-3xl font-display">Café</h1>
     </div>
-    <div class="flex-1"></div>
 
-    <!--    <div class="relative flex-1 py-0.5">-->
-    <!--      <input-->
-    <!--        name="search"-->
-    <!--        placeholder="Pesquisar"-->
-    <!--        class="mx-2 px-2 py-1 rounded-lg bg-amber-100 border border-amber-700 w-full"-->
-    <!--        required-->
-    <!--        minlength="3"-->
-    <!--        maxlength="20"-->
-    <!--        type="search"-->
-    <!--      />-->
-    <!--    </div>-->
+    <div class="relative flex-1 py-0.5">
+      <input
+        name="search"
+        placeholder="Pesquisar"
+        class="mx-2 px-2 py-1 rounded-lg bg-amber-100 border border-amber-700 w-full"
+        required
+        minlength="3"
+        maxlength="20"
+        type="search"
+        v-model="search"
+        @keyup.enter="searchProducts()"
+        @keyup.delete="searchAllProducts()"
+      />
+    </div>
 
     <div @click.prevent="$router.push('/cart')" class="relative">
-      <div
-        class="flex-none w-10 ml-4 cursor-pointer"
-      >
+      <div class="flex-none w-10 ml-4 cursor-pointer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -47,8 +47,24 @@
 
 <script setup>
 import { userStore } from '@/stores/user.js'
+import { productsStore } from '@/stores/products.js'
 import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
 const store = userStore()
+const products = productsStore()
 const { totalCart } = storeToRefs(store)
+const { getProducts  } = products
+
+const search = ref('')
+
+const searchProducts = (event) => {
+  getProducts(search.value)
+}
+
+const searchAllProducts = () => {
+  if (search.value === '') {
+    getProducts()
+  }
+}
 </script>
