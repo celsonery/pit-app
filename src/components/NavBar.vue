@@ -1,7 +1,7 @@
 <template>
   <div class="fixed top-0 flex h-12 p-1 mb-2 shadow-md bg-white w-full text-orange-950 z-50">
     <div @click.prevent="$router.push({ name: 'index' })" class="flex-none w-10 h-10 mx-2">
-      <img src="@/assets/coffee-icon.png" />
+      <img src="@/assets/coffee-icon.png" alt="cafe gourmet icon" />
     </div>
     <div class="flex-none w-14">
       <h1 class="text-3xl font-display">Café</h1>
@@ -58,7 +58,7 @@ const { getProducts  } = products
 
 const search = ref('')
 
-const searchProducts = (event) => {
+const searchProducts = () => {
   getProducts(search.value)
 }
 
